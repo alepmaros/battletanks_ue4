@@ -3,6 +3,8 @@ Content/Battleground_sharedassets/*
 Content/Landscape_Battleground.uasset
 Content/Battleground.umap
 Content/StarterContent/*
+Content/_Level/*
+!Content/_Level/gitkeep
 
 # Other stuff that can be ignored
 # Visual Studio 2015 user specific files
