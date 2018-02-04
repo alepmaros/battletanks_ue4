@@ -1,6 +1,7 @@
 # Larger files that need to be backed-up but cant be in this repo
 Content/Battleground_sharedassets/*
 Content/Landscape_Battleground.uasset
+Content/Battleground.umap
 Content/StarterContent/*
 
 # Other stuff that can be ignored
