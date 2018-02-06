@@ -1,11 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "AimingComponent.generated.h"
 
+class UTankBarrel;
+class UTankTurret;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANKS_API UAimingComponent : public UActorComponent
@@ -19,12 +19,14 @@ public:
 public:	
 	void aimAt(FVector hitLocation, float launchSpeed);
 
-	void setBarrelReference(UStaticMeshComponent *barrel);
+	void setBarrelReference(UTankBarrel *barrel);
+	void setTurretReference(UTankTurret *turret);
 
 private:
 	void moveBarrel(FVector aimDirection);
 
 private:
-	UStaticMeshComponent* mBarrel = nullptr;
+	UTankBarrel* mBarrel = nullptr;
+	UTankTurret* mTurret = nullptr;
 	
 };
