@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AimingComponent.h"
+#include "Classes/Components/StaticMeshComponent.h"
+#include "Classes/Components/SceneComponent.h"
+#include "Classes/Kismet/GameplayStatics.h"
 
 
 // Sets default values for this component's properties
@@ -8,32 +11,47 @@ UAimingComponent::UAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
 
-
-// Called when the game starts
-void UAimingComponent::BeginPlay()
+void UAimingComponent::aimAt(FVector hitLocation, float launchSpeed)
 {
-	Super::BeginPlay();
+	if (mBarrel == nullptr) { return; }
+	
+	FVector launchVelocity;
+	FVector startLocation = mBarrel->GetSocketLocation(FName("Projectile"));
 
-	// ...
+	if (UGameplayStatics::SuggestProjectileVelocity
+		(
+			this,
+			launchVelocity,
+			startLocation,
+			hitLocation,
+			launchSpeed,
+			false,
+			0,
+			0,
+			ESuggestProjVelocityTraceOption::DoNotTrace
+		)
+	)
+	{
+		FVector aimDirection = launchVelocity.GetSafeNormal();
+		moveBarrel(aimDirection);
+	}
 	
 }
 
-
-// Called every frame
-void UAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UAimingComponent::moveBarrel(FVector aimDirection)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	FRotator barrelRotation = mBarrel->GetForwardVector().Rotation();
+	FRotator aimAsRotator = aimDirection.Rotation();
+	FRotator deltaRotator = aimAsRotator - barrelRotation;
+	// work out diference difference between 
 }
 
-void UAimingComponent::aimAt(FVector hitLocation)
+void UAimingComponent::setBarrelReference(UStaticMeshComponent* barrel)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s"), *(GetOwner()->GetName()), *(hitLocation.ToString()));
+	mBarrel = barrel;
 }
-

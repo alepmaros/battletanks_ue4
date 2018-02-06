@@ -16,14 +16,15 @@ public:
 	// Sets default values for this component's properties
 	UAimingComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void aimAt(FVector hitLocation, float launchSpeed);
 
-	void aimAt(FVector hitLocation);
+	void setBarrelReference(UStaticMeshComponent *barrel);
+
+private:
+	void moveBarrel(FVector aimDirection);
+
+private:
+	UStaticMeshComponent* mBarrel = nullptr;
 	
 };
