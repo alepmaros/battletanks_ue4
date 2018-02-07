@@ -25,14 +25,12 @@ void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (mPlayerTank != nullptr)
-	{
-		if (mControlledTank != nullptr)
-		{
-			mControlledTank->aimAt(mPlayerTank->GetActorLocation());
-		}
-	}
-	
+	if (mPlayerTank == nullptr || mControlledTank == nullptr) { return; }
+
+	mControlledTank->aimAt(mPlayerTank->GetActorLocation());
+
+	mControlledTank->fire();
+
 }
 
 ATank* ATankAIController::getControlledTank() const

@@ -40,13 +40,13 @@ private:
 
 	// Value in % of where the crosshair is
 	// (normaly it is on the center of the screen horizontally and 33% vertically)
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float crossHairXLocation = 0.5;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float crossHairYLocation = 0.33333;
 
 	// Default: 10km
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float lineTraceRange = 1000000.0f;
 };

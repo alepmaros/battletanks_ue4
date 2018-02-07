@@ -7,6 +7,7 @@
 class UAimingComponent;
 class UTankBarrel;
 class UTankTurret;
+class UTankTrack;
 class AProjectile;
 
 UCLASS()
@@ -35,19 +36,29 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void setTurretReference(UTankTurret *turret);
 
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void setTracksReferences(UTankTrack *leftTrack, UTankTrack *rightTrack);
+
 	void aimAt(FVector hitLocation);
 
 	UFUNCTION(BlueprintCallable, Category = Firing)
 	void fire();
 
-public:
-	UPROPERTY(EditAnywhere, Category = Firing)
-	float launchSpeed = 4000; // Find sensible default
 
 private:
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> projectileBlueprint;
 
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float launchSpeed = 4000;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	double reloadTimeInSeconds = 2.0f;
+
+	double lastFireTime = 0.0f;
+
 	UTankBarrel *mBarrel = nullptr;
-	
+
+	UTankTrack *mLeftTrack = nullptr;
+	UTankTrack *mRightTrack = nullptr;
 };

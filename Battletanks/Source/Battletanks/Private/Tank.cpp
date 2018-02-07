@@ -29,6 +29,12 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void ATank::setTracksReferences(UTankTrack * leftTrack, UTankTrack * rightTrack)
+{
+	mLeftTrack = leftTrack;
+	mRightTrack = rightTrack;
+}
+
 void ATank::aimAt(FVector hitLocation)
 {
 	mTankAimingComponent->aimAt(hitLocation, launchSpeed);
@@ -36,7 +42,9 @@ void ATank::aimAt(FVector hitLocation)
 
 void ATank::fire()
 {
-	if (mBarrel == nullptr) { return; }
+	bool hasReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
+
+	if (!hasReloaded || mBarrel == nullptr) { return; }
 
 	float time = GetWorld()->DeltaTimeSeconds;
 
@@ -47,6 +55,8 @@ void ATank::fire()
 		);
 
 	projectile->launchProjectile(launchSpeed);
+
+	lastFireTime = FPlatformTime::Seconds();
 }
 
 void ATank::setBarrelReference(UTankBarrel *barrel)

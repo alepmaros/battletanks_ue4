@@ -29,6 +29,4 @@ private:
 private:
 	ATank* mControlledTank = nullptr;
 	ATank* mPlayerTank = nullptr;
-	
-	
 };
