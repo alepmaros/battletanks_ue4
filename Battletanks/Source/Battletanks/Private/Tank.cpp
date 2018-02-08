@@ -3,6 +3,7 @@
 #include "TankTrack.h"
 #include "Projectile.h"
 #include "AimingComponent.h"
+#include "TankMovementComponent.h"
 #include "Engine/World.h"
 
 // Sets default values
@@ -13,7 +14,6 @@ ATank::ATank()
 
 	// No need to protect pointers as it is added at constructor
 	mTankAimingComponent = CreateDefaultSubobject<UAimingComponent>(FName("Aiming Component"));
-
 }
 
 // Called when the game starts or when spawned
@@ -28,12 +28,6 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-}
-
-void ATank::setTracksReferences(UTankTrack * leftTrack, UTankTrack * rightTrack)
-{
-	mLeftTrack = leftTrack;
-	mRightTrack = rightTrack;
 }
 
 void ATank::aimAt(FVector hitLocation)

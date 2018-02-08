@@ -5,6 +5,7 @@
 #include "Tank.generated.h"
 
 class UAimingComponent;
+class UTankMovementComponent;
 class UTankBarrel;
 class UTankTurret;
 class UTankTrack;
@@ -24,7 +25,7 @@ protected:
 	virtual void BeginPlay() override;
 
 protected:
-	UAimingComponent* mTankAimingComponent;
+	UAimingComponent *mTankAimingComponent;
 
 public:	
 	// Called to bind functionality to input
@@ -35,9 +36,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void setTurretReference(UTankTurret *turret);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void setTracksReferences(UTankTrack *leftTrack, UTankTrack *rightTrack);
 
 	void aimAt(FVector hitLocation);
 
