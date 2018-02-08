@@ -1,5 +1,6 @@
 #include "Tank.h"
 #include "TankBarrel.h"
+#include "TankTrack.h"
 #include "Projectile.h"
 #include "AimingComponent.h"
 #include "Engine/World.h"
@@ -44,7 +45,7 @@ void ATank::fire()
 {
 	bool hasReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
 
-	if (!hasReloaded || mBarrel == nullptr) { return; }
+	if (!hasReloaded || mBarrel == nullptr || !projectileBlueprint) { return; }
 
 	float time = GetWorld()->DeltaTimeSeconds;
 
