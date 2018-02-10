@@ -1,6 +1,7 @@
 #include "TankPlayerController.h"
 #include "Engine/World.h"
 #include "Tank.h"
+#include "AimingComponent.h"
 
 void ATankPlayerController::BeginPlay()
 {
@@ -8,9 +9,19 @@ void ATankPlayerController::BeginPlay()
 
 	/// Get the tank that is being possessed
 	mControlledTank = getControlledTank();
-	if (mControlledTank == nullptr)
+	if (!ensure(mControlledTank))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Controlled tank not found (Is the parent pawn class ATank?)"));
+	}
+
+	UAimingComponent *aimingComponent = getControlledTank()->FindComponentByClass<UAimingComponent>();
+	if (ensure(aimingComponent))
+	{
+		FoundAimingComponent(aimingComponent);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No aiming component found for TankPlayerController"));
 	}
 }
 
@@ -23,7 +34,7 @@ void ATankPlayerController::Tick(float DeltaTime)
 
 void ATankPlayerController::aimTowardsCrosshair()
 {
-	if (mControlledTank == nullptr) { return; }
+	if ( !ensure(mControlledTank) ) { return; }
 
 	FVector hitLocation; 
 	if (getSightRayHitLocaiton(hitLocation))

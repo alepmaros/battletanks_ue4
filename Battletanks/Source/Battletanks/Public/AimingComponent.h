@@ -7,7 +7,15 @@
 class UTankBarrel;
 class UTankTurret;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UENUM()
+enum class EFiringState : uint8
+{
+	Reloading,
+	Aiming,
+	Locked
+};
+
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BATTLETANKS_API UAimingComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -22,8 +30,15 @@ public:
 	void setBarrelReference(UTankBarrel *barrel);
 	void setTurretReference(UTankTurret *turret);
 
+	UFUNCTION(BlueprintCallable, Category = Input)
+	void setTankReferences(UTankBarrel *barrel, UTankTurret *turret);
+
 private:
 	void moveBarrel(FVector aimDirection);
+
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "State")
+	EFiringState mFiringState = EFiringState::Locked;
 
 private:
 	UTankBarrel* mBarrel = nullptr;

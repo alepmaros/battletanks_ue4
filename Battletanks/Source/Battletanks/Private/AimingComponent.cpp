@@ -16,7 +16,7 @@ UAimingComponent::UAimingComponent()
 
 void UAimingComponent::aimAt(FVector hitLocation, float launchSpeed)
 {
-	if (mBarrel == nullptr || mTurret == nullptr) { return; }
+	if ( !ensure(mBarrel && mTurret) ) { return; }
 	
 	FVector launchVelocity;
 	FVector startLocation = mBarrel->GetSocketLocation(FName("Projectile"));
@@ -59,5 +59,11 @@ void UAimingComponent::setBarrelReference(UTankBarrel* barrel)
 
 void UAimingComponent::setTurretReference(UTankTurret * turret)
 {
+	mTurret = turret;
+}
+
+void UAimingComponent::setTankReferences(UTankBarrel *barrel, UTankTurret *turret)
+{
+	mBarrel = barrel;
 	mTurret = turret;
 }

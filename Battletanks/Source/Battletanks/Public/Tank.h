@@ -5,7 +5,6 @@
 #include "Tank.generated.h"
 
 class UAimingComponent;
-class UTankMovementComponent;
 class UTankBarrel;
 class UTankTurret;
 class UTankTrack;
@@ -25,17 +24,12 @@ protected:
 	virtual void BeginPlay() override;
 
 protected:
-	UAimingComponent *mTankAimingComponent;
+	UPROPERTY(BlueprintReadOnly)
+	UAimingComponent *mTankAimingComponent = nullptr;
 
 public:	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void setBarrelReference(UTankBarrel *barrel);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void setTurretReference(UTankTurret *turret);
 
 	void aimAt(FVector hitLocation);
 

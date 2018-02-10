@@ -5,6 +5,7 @@
 #include "TankPlayerController.generated.h"
 
 class ATank;
+class UAimingComponent;
 
 /**
  * 
@@ -33,8 +34,13 @@ private:
 	// Get a unit vector for the look direction of screen position
 	bool getLookDirection(FVector2D screenPosition, FVector &lookDirection) const;
 
+protected:
+	UFUNCTION(BlueprintCallable, Category = "Setup")
 	ATank* getControlledTank() const;
-	
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+	void FoundAimingComponent(UAimingComponent *aimingComponent);
+
 private:
 	ATank* mControlledTank = nullptr;
 

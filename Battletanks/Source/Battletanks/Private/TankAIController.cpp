@@ -8,14 +8,14 @@ void ATankAIController::BeginPlay()
 
 	/// Get the tank that is being possessed
 	mControlledTank = getControlledTank();
-	if (mControlledTank == nullptr)
+	if (!ensure(mControlledTank))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Controlled tank on TankAIController not found"));
 	}
 
 	/// Get the tank of the player
 	mPlayerTank = getPlayerTank();
-	if (mPlayerTank == nullptr)
+	if (!ensure(mPlayerTank))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s could not find the player's tank"), *(GetOwner()->GetName()) );
 	}
@@ -25,7 +25,7 @@ void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (mPlayerTank == nullptr || mControlledTank == nullptr) { return; }
+	if ( !ensure(mPlayerTank && mControlledTank) ) { return; }
 
 	MoveToActor(mPlayerTank, acceptanceRadius);
 
@@ -43,7 +43,7 @@ ATank* ATankAIController::getControlledTank() const
 ATank* ATankAIController::getPlayerTank() const
 {
 	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
-	if (playerController != nullptr)
+	if (ensure(playerController))
 	{
 		return Cast<ATank>(playerController->GetPawn());
 	}
