@@ -7,6 +7,7 @@
 #include "TankAIController.generated.h"
 
 class ATank;
+class UAimingComponent;
 
 /**
  * 
@@ -29,6 +30,7 @@ private:
 private:
 	ATank* mControlledTank = nullptr;
 	ATank* mPlayerTank = nullptr;
+	UAimingComponent *mAimingComponent = nullptr;
 
 	// How close the AI tank will get close to the player
 	UPROPERTY(EditDefaultsOnly)

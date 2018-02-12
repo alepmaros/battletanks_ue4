@@ -3,6 +3,11 @@
 #include "Tank.h"
 #include "AimingComponent.h"
 
+/*
+This probably need some fixing when there is destruction of the tank and de-posession since the
+tank doesnt get updated every single frame
+*/
+
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -14,10 +19,10 @@ void ATankPlayerController::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("Controlled tank not found (Is the parent pawn class ATank?)"));
 	}
 
-	UAimingComponent *aimingComponent = getControlledTank()->FindComponentByClass<UAimingComponent>();
-	if (ensure(aimingComponent))
+	mAimingComponent = getControlledTank()->FindComponentByClass<UAimingComponent>();
+	if (ensure(mAimingComponent))
 	{
-		FoundAimingComponent(aimingComponent);
+		FoundAimingComponent(mAimingComponent);
 	}
 	else
 	{
@@ -34,15 +39,12 @@ void ATankPlayerController::Tick(float DeltaTime)
 
 void ATankPlayerController::aimTowardsCrosshair()
 {
-	if ( !ensure(mControlledTank) ) { return; }
+	if ( !ensure(mAimingComponent) ) { return; }
 
 	FVector hitLocation; 
 	if (getSightRayHitLocaiton(hitLocation))
 	{
-		if (mControlledTank != nullptr)
-		{
-			mControlledTank->aimAt(hitLocation);
-		}
+		mAimingComponent->aimAt(hitLocation);
 	}
 }
 

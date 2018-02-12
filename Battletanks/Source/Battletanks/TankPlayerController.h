@@ -42,7 +42,8 @@ protected:
 	void FoundAimingComponent(UAimingComponent *aimingComponent);
 
 private:
-	ATank* mControlledTank = nullptr;
+	ATank *mControlledTank = nullptr;
+	UAimingComponent *mAimingComponent = nullptr;
 
 	// Value in % of where the crosshair is
 	// (normaly it is on the center of the screen horizontally and 33% vertically)

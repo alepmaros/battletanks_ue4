@@ -1,6 +1,7 @@
 #include "TankAIController.h"
 #include "Engine/World.h"
 #include "Tank.h"
+#include "AimingComponent.h"
 
 void ATankAIController::BeginPlay()
 {
@@ -19,19 +20,21 @@ void ATankAIController::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s could not find the player's tank"), *(GetOwner()->GetName()) );
 	}
+
+	mAimingComponent = getControlledTank()->FindComponentByClass<UAimingComponent>();
 }
 
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if ( !ensure(mPlayerTank && mControlledTank) ) { return; }
+	if ( !ensure(mPlayerTank && mControlledTank && mAimingComponent) ) { return; }
 
 	MoveToActor(mPlayerTank, acceptanceRadius);
 
-	mControlledTank->aimAt(mPlayerTank->GetActorLocation());
+	mAimingComponent->aimAt(mPlayerTank->GetActorLocation());
 
-	mControlledTank->fire();
+	mAimingComponent->fire();
 
 }
 

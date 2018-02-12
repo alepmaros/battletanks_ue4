@@ -2,9 +2,11 @@
 #include "Classes/Components/StaticMeshComponent.h"
 #include "Classes/Components/SceneComponent.h"
 #include "Classes/Kismet/GameplayStatics.h"
+
 #include "TankBarrel.h"
 #include "TankTurret.h"
-
+#include "Projectile.h"
+#include "Engine/World.h"
 
 // Sets default values for this component's properties
 UAimingComponent::UAimingComponent()
@@ -14,7 +16,26 @@ UAimingComponent::UAimingComponent()
 	// ...
 }
 
-void UAimingComponent::aimAt(FVector hitLocation, float launchSpeed)
+void UAimingComponent::fire()
+{
+	bool hasReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
+
+	if (!ensure(mBarrel && projectileBlueprint) || !hasReloaded) { return; }
+
+	float time = GetWorld()->DeltaTimeSeconds;
+
+	AProjectile *projectile = GetWorld()->SpawnActor<AProjectile>(
+		projectileBlueprint,
+		mBarrel->GetSocketLocation(FName("Projectile")),
+		mBarrel->GetSocketRotation(FName("Projectile"))
+		);
+
+	projectile->launchProjectile(mLaunchSpeed);
+
+	lastFireTime = FPlatformTime::Seconds();
+}
+
+void UAimingComponent::aimAt(FVector hitLocation)
 {
 	if ( !ensure(mBarrel && mTurret) ) { return; }
 	
@@ -26,7 +47,7 @@ void UAimingComponent::aimAt(FVector hitLocation, float launchSpeed)
 		launchVelocity,
 		startLocation,
 		hitLocation,
-		launchSpeed,
+		mLaunchSpeed,
 		false,
 		0,
 		0,
