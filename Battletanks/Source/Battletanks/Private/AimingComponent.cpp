@@ -11,28 +11,61 @@
 // Sets default values for this component's properties
 UAimingComponent::UAimingComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
+}
 
-	// ...
+void UAimingComponent::BeginPlay()
+{
+	lastFireTime = FPlatformTime::Seconds();
+}
+
+void UAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	bool hasReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
+	if (!hasReloaded)
+	{
+		mFiringState = EFiringState::Reloading;
+	}
+	else if (isBarrelMoving())
+	{
+		mFiringState = EFiringState::Aiming;
+	}
+	else
+	{
+		mFiringState = EFiringState::Locked;
+	}
+
+}
+
+bool UAimingComponent::isBarrelMoving()
+{
+	if (!ensure(mBarrel)) { return false; }
+
+	FVector barrelForward = mBarrel->GetForwardVector();
+
+	return !barrelForward.Equals(mAimDirection, 0.01);
 }
 
 void UAimingComponent::fire()
 {
-	bool hasReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
+	
+	if (!ensure(mBarrel && projectileBlueprint)) { return; }
 
-	if (!ensure(mBarrel && projectileBlueprint) || !hasReloaded) { return; }
+	if (mFiringState != EFiringState::Reloading)
+	{
+		AProjectile *projectile = GetWorld()->SpawnActor<AProjectile>(
+			projectileBlueprint,
+			mBarrel->GetSocketLocation(FName("Projectile")),
+			mBarrel->GetSocketRotation(FName("Projectile"))
+			);
 
-	float time = GetWorld()->DeltaTimeSeconds;
+		projectile->launchProjectile(mLaunchSpeed);
 
-	AProjectile *projectile = GetWorld()->SpawnActor<AProjectile>(
-		projectileBlueprint,
-		mBarrel->GetSocketLocation(FName("Projectile")),
-		mBarrel->GetSocketRotation(FName("Projectile"))
-		);
+		lastFireTime = FPlatformTime::Seconds();
+	}
 
-	projectile->launchProjectile(mLaunchSpeed);
-
-	lastFireTime = FPlatformTime::Seconds();
 }
 
 void UAimingComponent::aimAt(FVector hitLocation)
@@ -56,8 +89,8 @@ void UAimingComponent::aimAt(FVector hitLocation)
 
 	if (foundAimingSolution)
 	{
-		FVector aimDirection = launchVelocity.GetSafeNormal();
-		moveBarrel(aimDirection);
+		mAimDirection = launchVelocity.GetSafeNormal();
+		moveBarrel(mAimDirection);
 	}
 	
 }

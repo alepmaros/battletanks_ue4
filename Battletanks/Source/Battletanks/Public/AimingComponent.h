@@ -25,6 +25,11 @@ public:
 	// Sets default values for this component's properties
 	UAimingComponent();
 
+	virtual void BeginPlay() override;
+
+protected:
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
 public:	
 	void aimAt(FVector hitLocation);
 
@@ -40,9 +45,11 @@ public:
 private:
 	void moveBarrel(FVector aimDirection);
 
+	bool isBarrelMoving();
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringState mFiringState = EFiringState::Locked;
+	EFiringState mFiringState = EFiringState::Reloading;
 
 private:
 	UTankBarrel* mBarrel = nullptr;
@@ -58,5 +65,7 @@ private:
 	double reloadTimeInSeconds = 2.0f;
 
 	double lastFireTime = 0.0f;
+
+	FVector mAimDirection = FVector(1.0f);
 	
 };
