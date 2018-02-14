@@ -20,6 +20,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void setThrottle(float throttle);
 
+private:
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent *HitComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, FVector NormalImpuse, const FHitResult &Hit);
+
 protected:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
